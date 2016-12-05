@@ -1,0 +1,45 @@
+package chunks;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import utils.Browser;
+
+
+public class HeaderChunk {
+
+	private static final Logger logger = LogManager.getLogger(HeaderChunk.class);
+
+	public enum GoogleServices {
+		Play, Drive, YouTube, Gmail, Maps, Calendar, News
+	}
+
+	@FindBy(how = How.XPATH, using = "//*[@id='gbwa']/div[contains(@class,'gb_')]/a[contains(@href,'/options/') and contains(@title,'apps')]")
+	protected WebElement appsBtn;
+
+	@FindBy(how = How.XPATH, using = "//ul//li/a[contains(@href,'play.google')]")
+	protected WebElement googlePlayLnk;
+	
+	@FindBy(how = How.NAME, using = "q")
+	private WebElement searchBox;
+
+	public void searchFor(String text) {
+		logger.info(String.format("Searching for: '%s'", text));
+		searchBox.sendKeys(text);
+		searchBox.submit();
+	}
+
+	public void openPageForGoogleService(GoogleServices app) {
+		switch (app) {
+		case Play:
+			logger.info(String.format("Opening [%s] google service page", app));
+			Browser.clickOnWebElement(appsBtn);
+			Browser.clickOnWebElement(googlePlayLnk);
+			break;
+		default:
+			logger.info("Is not supported yet");
+		}
+	}
+}
